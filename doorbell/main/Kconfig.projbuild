@@ -1,0 +1,11 @@
+menu "Switchbox GPIO Configuration"
+    config BUZZER_GPIO
+        int "Buzzer GPIO number"
+        range 0 39
+        default 18
+
+    config DOOR_GPIO
+        int "Door lock GPIO number"
+        range 0 39
+        default 15
+endmenu
