@@ -57,22 +57,22 @@ void app_main() {
       TickType_t ticks = xTaskGetTickCount() - push_at;
       push_at = 0;
 
-      TickType_t secs = (ticks / portTICK_PERIOD_MS) / 10;
+      TickType_t msecs = ticks * 10;
 
-      if (secs >= 2 && secs <= 5) {
-        printf("on for %ds, access granted!\n", secs);
+      if (msecs >= 700 && msecs <= 5000) {
+        printf("on for %dms, access granted!\n", msecs);
 
         printf("turning on door...\n");
 
         gpio_set_level(GPIO_DOOR_LOCK, 1);
 
-        vTaskDelay(1000 / portTICK_PERIOD_MS);
+        vTaskDelay(2000 / portTICK_PERIOD_MS);
         gpio_set_level(GPIO_DOOR_LOCK, 0);
 
         printf("turning off door...\n");
 
       } else {
-        printf("on for %ds, bad duration\n", secs);
+        printf("on for %dms, bad duration\n", msecs);
       }
     }
   }
