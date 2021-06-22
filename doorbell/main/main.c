@@ -1,9 +1,13 @@
 #include <stdio.h>
 
-#include "driver/gpio.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/queue.h"
 #include "freertos/task.h"
+
+#include "driver/gpio.h"
+#include "esp_wifi.h"
+#include "nvs_flash.h"
+
 #include "sdkconfig.h"
 
 #define GPIO_DOOR_BUZZER 23
@@ -17,7 +21,58 @@ static void IRAM_ATTR gpio_isr_handler(void *arg) {
   xQueueSendFromISR(gpio_evt_queue, &gpio_num, NULL);
 }
 
+static void event_handler(
+    void *arg,
+    esp_event_base_t event_base,
+    int32_t event_id,
+    void *event_data) {
+  if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_START) {
+    esp_wifi_connect();
+  } else if (
+      event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_DISCONNECTED) {
+    esp_wifi_connect();
+  } else if (event_base == IP_EVENT && event_id == IP_EVENT_STA_GOT_IP) {
+    ip_event_got_ip_t *event = (ip_event_got_ip_t *)event_data;
+    printf("got ip: %s\n", ip4addr_ntoa(&event->ip_info.ip));
+  }
+}
+
 void app_main() {
+
+  nvs_flash_init();
+
+  tcpip_adapter_init();
+
+  wifi_init_config_t wifi_init_conf = WIFI_INIT_CONFIG_DEFAULT();
+
+  esp_wifi_init(&wifi_init_conf);
+
+  esp_event_handler_register(
+      WIFI_EVENT, ESP_EVENT_ANY_ID, &event_handler, NULL);
+
+  /*
+  wifi_config_t wifi_config = {
+      .sta = {.ssid = "asdf", .password = "asdf"},
+  };
+  */
+  esp_wifi_set_mode(WIFI_MODE_STA);
+
+  wifi_config_t wifi_config = {
+      .sta =
+          {
+              .ssid = "",
+              .password = "",
+              .scan_method = WIFI_ALL_CHANNEL_SCAN,
+              .sort_method = WIFI_CONNECT_AP_BY_SIGNAL,
+              .threshold.rssi = -127,
+              .threshold.authmode = WIFI_AUTH_OPEN,
+          },
+  };
+  esp_wifi_set_config(ESP_IF_WIFI_STA, &wifi_config);
+
+  /*wifi_scan_config_t scan_config;*/
+  esp_wifi_start();
+
   gpio_set_direction(GPIO_DOOR_LOCK, GPIO_MODE_DEF_OUTPUT);
   gpio_set_level(GPIO_DOOR_LOCK, 0);
 
