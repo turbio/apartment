@@ -3,7 +3,7 @@
 # project subdirectory.
 #
 
-PROJECT_NAME := i2c-tools
+PROJECT_NAME := climate
 
 EXTRA_COMPONENT_DIRS = $(IDF_PATH)/examples/system/console/components
 
