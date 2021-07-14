@@ -1,11 +1,3 @@
-/* ADC1 Example
-
-   This example code is in the Public Domain (or CC0 licensed, at your option.)
-
-   Unless required by applicable law or agreed to in writing, this
-   software is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-   CONDITIONS OF ANY KIND, either express or implied.
-*/
 #include "driver/adc.h"
 #include "driver/gpio.h"
 #include "driver/i2c.h"
@@ -36,7 +28,7 @@ static uint8_t g_pass[32] = "wewladddd";
 
 #define WIFI_CONNECTED_BIT BIT0
 #define WIFI_FAIL_BIT BIT1
-#define EXAMPLE_ESP_MAXIMUM_RETRY 3
+#define WIFI_MAXIMUM_RETRY 3
 
 #define CALIB_AIR 1450
 #define CALIB_WATER 730
@@ -51,7 +43,7 @@ static void event_handler(void *arg, esp_event_base_t event_base,
     esp_wifi_connect();
   } else if (event_base == WIFI_EVENT &&
              event_id == WIFI_EVENT_STA_DISCONNECTED) {
-    if (s_retry_num < EXAMPLE_ESP_MAXIMUM_RETRY) {
+    if (s_retry_num < WIFI_MAXIMUM_RETRY) {
       esp_wifi_connect();
       s_retry_num++;
     } else {

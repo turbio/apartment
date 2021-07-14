@@ -3,6 +3,6 @@
 # project subdirectory.
 #
 
-PROJECT_NAME := adc
+PROJECT_NAME := plantprobe
 
 include $(IDF_PATH)/make/project.mk
