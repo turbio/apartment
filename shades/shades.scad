@@ -86,7 +86,8 @@ sprock_height = 4*2;
 sprock_height_pad = 1;
 
 shaft_hole_pad = .03;
-shaft_shaft_pad = .06;
+shaft_shaft_pad = .1;
+sprock_pad = 1;
 
 difference() {
 	union() {
@@ -96,10 +97,12 @@ difference() {
 
 	// sprocket area
 	translate([-50, 0, 0]) cube([100,100,sprock_height+sprock_height_pad]);
-	translate([0, 0, 0]) cylinder(sprock_height+sprock_height_pad, r=sprock_wall_d);
+	translate([0, 0, 0]) cylinder(sprock_height+sprock_height_pad, r=sprock_wall_d+sprock_pad);
 
 	// shaft
 	translate([0, 0, -10+1]) cylinder(10, r=shaft_radius+shaft_hole_pad);
+
+	// notchy thing
 	translate([0, 0, 0]) cylinder(20, r=shaft_peg_radius+shaft_hole_pad);
 }
 

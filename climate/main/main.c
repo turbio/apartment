@@ -315,7 +315,7 @@ void app_main(void) {
   uint16_t ticks = 0;
 
   for (;;) {
-    vTaskDelay(1000 / portTICK_PERIOD_MS);
+    vTaskDelay(5000 / portTICK_PERIOD_MS);
 
     uint16_t rdy;
     ReadFromSCD30(COMMAND_GET_DATA_READY, &rdy, 1);
