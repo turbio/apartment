@@ -332,6 +332,11 @@ void app_main(void) {
     union b2f temp = {.b = {measure[3], measure[2]}};
     union b2f hum = {.b = {measure[5], measure[4]}};
 
+    // this happens sometimes xD
+    if (co2.f <= 0 || temp.f <= 0 || humidity <= 0) {
+      continue;
+    }
+
     printf("co2?  %f\n", co2.f);
     printf("temp? %f\n", temp.f);
     printf("hume? %f\n", hum.f);
